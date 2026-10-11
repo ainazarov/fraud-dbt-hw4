@@ -1,0 +1,729 @@
+ Container fraud-analytics-hw2-zookeeper-1 Running 
+ Container fraud-analytics-hw2-clickhouse-1 Running 
+ Container fraud-analytics-hw2-kafka-1 Running 
+ Container fraud-analytics-hw2-zookeeper-1 Waiting 
+ Container fraud-analytics-hw2-clickhouse-1 Waiting 
+ Container fraud-analytics-hw2-kafka-1 Waiting 
+ Container fraud-analytics-hw2-zookeeper-1 Healthy 
+ Container fraud-analytics-hw2-clickhouse-1 Healthy 
+ Container fraud-analytics-hw2-kafka-1 Healthy 
+ Image fraud-analytics-hw2-client:local Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 554B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 366B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.11.11-slim-bookworm
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 151B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.69kB done
+#5 DONE 0.0s
+
+#6 [1/8] FROM docker.io/library/python:3.11.11-slim-bookworm@sha256:081075da77b2b55c23c088251026fb69a7b2bf92471e491ff5fd75c192fd38e5
+#6 resolve docker.io/library/python:3.11.11-slim-bookworm@sha256:081075da77b2b55c23c088251026fb69a7b2bf92471e491ff5fd75c192fd38e5 0.0s done
+#6 DONE 0.1s
+
+#7 [2/8] WORKDIR /app
+#7 CACHED
+
+#8 [3/8] COPY requirements.txt .
+#8 CACHED
+
+#9 [4/8] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [5/8] COPY scripts/ scripts/
+#10 DONE 0.1s
+
+#11 [6/8] COPY tests/ tests/
+#11 DONE 0.1s
+
+#12 [7/8] COPY sql/ sql/
+#12 DONE 0.1s
+
+#13 [8/8] COPY data/demo.csv data/demo.csv
+#13 DONE 0.1s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 0.4s done
+#14 exporting manifest sha256:c6d760afc50887e7d01b6de2d289ee31ce6c53db6bc9abb963cd09a11df398e5 0.0s done
+#14 exporting config sha256:e6a63cc6f5d5ca3397b8e025582a4304619b1003a58718744c742020bc83fcf4 0.0s done
+#14 exporting attestation manifest sha256:dc434c649bc794287f6809d9268504f3a73094696fb2ef9723c2db3729bcd580 0.0s done
+#14 exporting manifest list sha256:f203fe2caa920b0c5b2d8bba6afec24f55af477429bdb328557874c39368ab70
+#14 exporting manifest list sha256:f203fe2caa920b0c5b2d8bba6afec24f55af477429bdb328557874c39368ab70 0.0s done
+#14 naming to docker.io/library/fraud-analytics-hw2-client:local done
+#14 unpacking to docker.io/library/fraud-analytics-hw2-client:local 0.1s done
+#14 DONE 0.7s
+
+#15 resolving provenance for metadata file
+#15 DONE 0.0s
+ Image fraud-analytics-hw2-client:local Built 
+ Container fraud-analytics-hw2-tests-run-f4068c707adb Creating 
+ Container fraud-analytics-hw2-tests-run-f4068c707adb Created 
+test_delivery_error_creates_no_manifest (test_producer.CsvAndPublishTests.test_delivery_error_creates_no_manifest) ... ok
+test_empty_file_and_header_only (test_producer.CsvAndPublishTests.test_empty_file_and_header_only) ... ok
+test_failed_retry_preserves_existing_manifest (test_producer.CsvAndPublishTests.test_failed_retry_preserves_existing_manifest) ... ok
+test_invalid_header_variants (test_producer.CsvAndPublishTests.test_invalid_header_variants) ... ok
+test_invalid_limits (test_producer.CsvAndPublishTests.test_invalid_limits) ... ok
+test_limit_does_not_parse_unselected_malformed_csv (test_producer.CsvAndPublishTests.test_limit_does_not_parse_unselected_malformed_csv) ... ok
+test_limit_only_validates_and_sends_selected_rows (test_producer.CsvAndPublishTests.test_limit_only_validates_and_sends_selected_rows) ... ok
+test_missing_and_extra_field_values (test_producer.CsvAndPublishTests.test_missing_and_extra_field_values) ... ok
+test_missing_callbacks_are_failure_even_if_flush_returns_zero (test_producer.CsvAndPublishTests.test_missing_callbacks_are_failure_even_if_flush_returns_zero) ... ok
+test_missing_target_in_test_header (test_producer.CsvAndPublishTests.test_missing_target_in_test_header) ... ok
+test_preflight_failure_sends_nothing_and_writes_no_receipt (test_producer.CsvAndPublishTests.test_preflight_failure_sends_nothing_and_writes_no_receipt) ... ok
+test_queue_backpressure_is_retried (test_producer.CsvAndPublishTests.test_queue_backpressure_is_retried) ... ok
+test_snapshot_is_independent_of_later_source_changes (test_producer.CsvAndPublishTests.test_snapshot_is_independent_of_later_source_changes) ... ok
+test_stream_preflight_hash_keys_unicode_and_cleanup (test_producer.CsvAndPublishTests.test_stream_preflight_hash_keys_unicode_and_cleanup) ... ok
+test_success_receipt_requires_all_acks_and_records_config (test_producer.CsvAndPublishTests.test_success_receipt_requires_all_acks_and_records_config) ... ok
+test_unflushed_messages_are_failure (test_producer.CsvAndPublishTests.test_unflushed_messages_are_failure) ... ok
+test_coordinate_bounds_and_finiteness (test_producer.NormalizeTests.test_coordinate_bounds_and_finiteness) ... ok
+test_dataset_names (test_producer.NormalizeTests.test_dataset_names) ... ok
+test_exact_amount_format (test_producer.NormalizeTests.test_exact_amount_format) ... ok
+test_keeps_every_original_field_and_string_postcode (test_producer.NormalizeTests.test_keeps_every_original_field_and_string_postcode) ... ok
+test_nullable_target_and_unlabeled_test_data (test_producer.NormalizeTests.test_nullable_target_and_unlabeled_test_data) ... ok
+test_population_uint32 (test_producer.NormalizeTests.test_population_uint32) ... ok
+test_rejects_invalid_amount_without_rounding (test_producer.NormalizeTests.test_rejects_invalid_amount_without_rounding) ... ok
+test_rejects_invalid_or_lossy_timestamp (test_producer.NormalizeTests.test_rejects_invalid_or_lossy_timestamp) ... ok
+test_rejects_invalid_target (test_producer.NormalizeTests.test_rejects_invalid_target) ... ok
+test_transaction_identity_is_stable_and_separates_inputs (test_producer.NormalizeTests.test_transaction_identity_is_stable_and_separates_inputs) ... ok
+test_utc_assumption_and_explicit_timezone (test_producer.NormalizeTests.test_utc_assumption_and_explicit_timezone) ... ok
+test_validates_state_without_silent_normalization (test_producer.NormalizeTests.test_validates_state_without_silent_normalization) ... ok
+test_validation_error_does_not_echo_private_value (test_producer.NormalizeTests.test_validation_error_does_not_echo_private_value) ... ok
+test_aggregate_waits_for_view_convergence_but_rejects_wrong_results (test_reference.ReferenceTests.test_aggregate_waits_for_view_convergence_but_rejects_wrong_results) ... ok
+test_bad_precision_is_not_rounded_silently (test_reference.ReferenceTests.test_bad_precision_is_not_rounded_silently) ... ok
+test_duplicate_transactions_fail_before_wait_completes (test_reference.ReferenceTests.test_duplicate_transactions_fail_before_wait_completes) ... ok
+test_explicit_null_target (test_reference.ReferenceTests.test_explicit_null_target) ... ok
+test_missing_rows_fail (test_reference.ReferenceTests.test_missing_rows_fail) ... ok
+test_quoted_commas_ties_and_decimal_order (test_reference.ReferenceTests.test_quoted_commas_ties_and_decimal_order) ... ok
+test_result_mismatch_and_duplicate_state_fail (test_reference.ReferenceTests.test_result_mismatch_and_duplicate_state_fail) ... ok
+test_sample_validation_normalizes_utc_and_nullable_target (test_reference.ReferenceTests.test_sample_validation_normalizes_utc_and_nullable_target) ... ok
+test_unlabelled_test_and_limit (test_reference.ReferenceTests.test_unlabelled_test_and_limit) ... ok
+
+----------------------------------------------------------------------
+Ran 38 tests in 0.046s
+
+OK
+ Container fraud-analytics-hw2-kafka-1 Running 
+ Container fraud-analytics-hw2-zookeeper-1 Running 
+ Container fraud-analytics-hw2-clickhouse-1 Running 
+ Container fraud-analytics-hw2-kafka-1 Waiting 
+ Container fraud-analytics-hw2-kafka-1 Healthy 
+ Container fraud-analytics-hw2-kafka-init-1 Starting 
+ Container fraud-analytics-hw2-kafka-init-1 Started 
+ Container fraud-analytics-hw2-clickhouse-1 Waiting 
+ Container fraud-analytics-hw2-kafka-init-1 Waiting 
+ Container fraud-analytics-hw2-clickhouse-1 Healthy 
+ Container fraud-analytics-hw2-kafka-init-1 Exited 
+ Container fraud-analytics-hw2-schema-init-1 Starting 
+ Container fraud-analytics-hw2-schema-init-1 Started 
+ Container fraud-analytics-hw2-schema-init-1 Waiting 
+ Container fraud-analytics-hw2-schema-init-1 Exited 
+ Container fraud-analytics-hw2-producer-run-86789a52f574 Creating 
+ Container fraud-analytics-hw2-producer-run-86789a52f574 Created 
+{"dataset": "train", "input_file": "/data/train.csv", "input_sha256": "2fd291f0d66cbb1f3c3e442396f3725d4cbde650d5dd0c16322c5230d3776b99", "input_bytes": 144559817, "rows": 786431, "enqueued": 786431, "delivered": 786431, "delivery_errors": 0, "topic": "transactions", "started_utc": "2026-10-05T19:10:40Z", "finished_utc": "2026-10-05T19:10:42Z", "elapsed_seconds": 2.089, "transaction_id_scheme": "sha256(dataset + NUL + input_sha256 + NUL + row_number)"}
+ Container fraud-analytics-hw2-zookeeper-1 Running 
+ Container fraud-analytics-hw2-clickhouse-1 Running 
+ Container fraud-analytics-hw2-kafka-1 Running 
+ Container fraud-analytics-hw2-kafka-1 Waiting 
+ Container fraud-analytics-hw2-kafka-1 Healthy 
+ Container fraud-analytics-hw2-kafka-init-1 Starting 
+ Container fraud-analytics-hw2-kafka-init-1 Started 
+ Container fraud-analytics-hw2-clickhouse-1 Waiting 
+ Container fraud-analytics-hw2-kafka-init-1 Waiting 
+ Container fraud-analytics-hw2-clickhouse-1 Healthy 
+ Container fraud-analytics-hw2-kafka-init-1 Exited 
+ Container fraud-analytics-hw2-schema-init-1 Starting 
+ Container fraud-analytics-hw2-schema-init-1 Started 
+ Container fraud-analytics-hw2-schema-init-1 Waiting 
+ Container fraud-analytics-hw2-schema-init-1 Exited 
+ Container fraud-analytics-hw2-verify-run-49b930f24e5a Creating 
+ Container fraud-analytics-hw2-verify-run-49b930f24e5a Created 
+{
+  "dataset": "train",
+  "started_at_utc": "2026-10-05T19:10:46.143099+00:00",
+  "status": "passed",
+  "source_file": "train.csv",
+  "source_sha256": "2fd291f0d66cbb1f3c3e442396f3725d4cbde650d5dd0c16322c5230d3776b99",
+  "source_sha256_scope": "entire input file, including when --limit is used",
+  "limit": null,
+  "expected_rows": 786431,
+  "state_count": 51,
+  "expected_null_targets": 0,
+  "tie_policy": "largest (amount, cat_id, transaction_id); exported category uses (amount, cat_id)",
+  "tables": {
+    "transactions_baseline": {
+      "rows": 786431,
+      "unique_transactions": 786431,
+      "unique_row_numbers": 786431,
+      "first_row": 1,
+      "last_row": 786431,
+      "null_targets": 0
+    },
+    "transactions": {
+      "rows": 786431,
+      "unique_transactions": 786431,
+      "unique_row_numbers": 786431,
+      "first_row": 1,
+      "last_row": 786431,
+      "null_targets": 0
+    }
+  },
+  "sample_rows_checked_per_table": 7,
+  "queries_verified": [
+    "baseline",
+    "raw",
+    "aggregate"
+  ],
+  "clickhouse_export": "max_by_state_train.csv",
+  "independent_reference_export": "reference_max_by_state_train.csv",
+  "clickhouse_version": "25.3.6.56",
+  "finished_at_utc": "2026-10-05T19:10:52.697847+00:00",
+  "elapsed_seconds": 7.536
+}
+ Container fraud-analytics-hw2-zookeeper-1 Running 
+ Container fraud-analytics-hw2-kafka-1 Running 
+ Container fraud-analytics-hw2-clickhouse-1 Running 
+ Container fraud-analytics-hw2-kafka-1 Waiting 
+ Container fraud-analytics-hw2-kafka-1 Healthy 
+ Container fraud-analytics-hw2-kafka-init-1 Starting 
+ Container fraud-analytics-hw2-kafka-init-1 Started 
+ Container fraud-analytics-hw2-kafka-init-1 Waiting 
+ Container fraud-analytics-hw2-clickhouse-1 Waiting 
+ Container fraud-analytics-hw2-clickhouse-1 Healthy 
+ Container fraud-analytics-hw2-kafka-init-1 Exited 
+ Container fraud-analytics-hw2-schema-init-1 Starting 
+ Container fraud-analytics-hw2-schema-init-1 Started 
+ Container fraud-analytics-hw2-schema-init-1 Waiting 
+ Container fraud-analytics-hw2-schema-init-1 Exited 
+ Container fraud-analytics-hw2-producer-run-f8590d896809 Creating 
+ Container fraud-analytics-hw2-producer-run-f8590d896809 Created 
+{"dataset": "test", "input_file": "/data/test.csv", "input_sha256": "4129db5d9079f907d9a38aefc170f5e105a650a8273457aaae02a1f735516eac", "input_bytes": 47662750, "rows": 262144, "enqueued": 262144, "delivered": 262144, "delivery_errors": 0, "topic": "transactions", "started_utc": "2026-10-05T19:11:00Z", "finished_utc": "2026-10-05T19:11:01Z", "elapsed_seconds": 0.63, "transaction_id_scheme": "sha256(dataset + NUL + input_sha256 + NUL + row_number)"}
+ Container fraud-analytics-hw2-clickhouse-1 Running 
+ Container fraud-analytics-hw2-kafka-1 Running 
+ Container fraud-analytics-hw2-zookeeper-1 Running 
+ Container fraud-analytics-hw2-kafka-1 Waiting 
+ Container fraud-analytics-hw2-kafka-1 Healthy 
+ Container fraud-analytics-hw2-kafka-init-1 Starting 
+ Container fraud-analytics-hw2-kafka-init-1 Started 
+ Container fraud-analytics-hw2-clickhouse-1 Waiting 
+ Container fraud-analytics-hw2-kafka-init-1 Waiting 
+ Container fraud-analytics-hw2-clickhouse-1 Healthy 
+ Container fraud-analytics-hw2-kafka-init-1 Exited 
+ Container fraud-analytics-hw2-schema-init-1 Starting 
+ Container fraud-analytics-hw2-schema-init-1 Started 
+ Container fraud-analytics-hw2-schema-init-1 Waiting 
+ Container fraud-analytics-hw2-schema-init-1 Exited 
+ Container fraud-analytics-hw2-verify-run-bcb9c648f285 Creating 
+ Container fraud-analytics-hw2-verify-run-bcb9c648f285 Created 
+{
+  "dataset": "test",
+  "started_at_utc": "2026-10-05T19:11:04.826429+00:00",
+  "status": "passed",
+  "source_file": "test.csv",
+  "source_sha256": "4129db5d9079f907d9a38aefc170f5e105a650a8273457aaae02a1f735516eac",
+  "source_sha256_scope": "entire input file, including when --limit is used",
+  "limit": null,
+  "expected_rows": 262144,
+  "state_count": 51,
+  "expected_null_targets": 262144,
+  "tie_policy": "largest (amount, cat_id, transaction_id); exported category uses (amount, cat_id)",
+  "tables": {
+    "transactions_baseline": {
+      "rows": 262144,
+      "unique_transactions": 262144,
+      "unique_row_numbers": 262144,
+      "first_row": 1,
+      "last_row": 262144,
+      "null_targets": 262144
+    },
+    "transactions": {
+      "rows": 262144,
+      "unique_transactions": 262144,
+      "unique_row_numbers": 262144,
+      "first_row": 1,
+      "last_row": 262144,
+      "null_targets": 262144
+    }
+  },
+  "sample_rows_checked_per_table": 7,
+  "queries_verified": [
+    "baseline",
+    "raw",
+    "aggregate"
+  ],
+  "clickhouse_export": "max_by_state_test.csv",
+  "independent_reference_export": "reference_max_by_state_test.csv",
+  "clickhouse_version": "25.3.6.56",
+  "finished_at_utc": "2026-10-05T19:11:05.922913+00:00",
+  "elapsed_seconds": 1.096
+}
+ Container fraud-analytics-hw2-benchmark-run-4e051fbe3fb1 Creating 
+ Container fraud-analytics-hw2-benchmark-run-4e051fbe3fb1 Created 
+Compacting only fraud.transactions_baseline, fraud.transactions and fraud.state_max
+Completed benchmark round 1/15
+Completed benchmark round 2/15
+Completed benchmark round 3/15
+Completed benchmark round 4/15
+Completed benchmark round 5/15
+Completed benchmark round 6/15
+Completed benchmark round 7/15
+Completed benchmark round 8/15
+Completed benchmark round 9/15
+Completed benchmark round 10/15
+Completed benchmark round 11/15
+Completed benchmark round 12/15
+Completed benchmark round 13/15
+Completed benchmark round 14/15
+Completed benchmark round 15/15
+{
+  "dataset": "train",
+  "run_id": "1d85a3b286cc4b7ab23c36f3f35debc1",
+  "started_at_utc": "2026-10-05T19:11:06.730377+00:00",
+  "repetitions_per_query": 15,
+  "warmup_runs_per_query": 1,
+  "random_order_seed": 20261005,
+  "query_settings": {
+    "max_threads": 2,
+    "use_query_cache": 0,
+    "log_queries": 1,
+    "log_queries_probability": 1,
+    "log_queries_min_query_duration_ms": 0
+  },
+  "method": "warm-cache single-node; sequential queries in a deterministically shuffled order each round",
+  "global_caches_dropped": false,
+  "compacted_before_run": true,
+  "compaction_scope": [
+    "fraud.transactions_baseline",
+    "fraud.transactions",
+    "fraud.state_max"
+  ],
+  "client_python": "3.11.11",
+  "client_platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+  "caveats": [
+    "Duration depends on hardware, other workloads, merges and the loaded datasets.",
+    "Server query_duration_ms has millisecond resolution; very small timings may be zero.",
+    "Client elapsed_ms includes HTTP transport; it is reported separately from server duration_ms.",
+    "The aggregate table accelerates this specific query and adds storage and ingestion work."
+  ],
+  "server": {
+    "version": "25.3.6.56",
+    "hostname": "a3e909c9e6c5",
+    "timezone": "UTC"
+  },
+  "server_resource_metrics": [
+    {
+      "metric": "CGroupMemoryTotal",
+      "value": 0
+    },
+    {
+      "metric": "OSMemoryAvailable",
+      "value": 13905039360
+    },
+    {
+      "metric": "OSMemoryTotal",
+      "value": 16322211840
+    }
+  ],
+  "storage_before": {
+    "scope": "active parts for whole tables, including all loaded datasets; physical aggregate rows may merge",
+    "tables": {
+      "state_max": {
+        "physical_rows": 109,
+        "data_compressed_bytes": 5766,
+        "data_uncompressed_bytes": 18648,
+        "bytes_on_disk": 5884,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 51
+      },
+      "transactions": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 72906868,
+        "data_uncompressed_bytes": 174770007,
+        "bytes_on_disk": 72959534,
+        "active_parts": 15,
+        "rows_for_selected_dataset": 786431
+      },
+      "transactions_baseline": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 150195239,
+        "data_uncompressed_bytes": 255485572,
+        "bytes_on_disk": 150207553,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 786431
+      }
+    }
+  },
+  "state_count": 51,
+  "samples_file": "benchmark_samples_train.csv",
+  "summary": {
+    "baseline": {
+      "samples": 15,
+      "duration_ms": {
+        "median": 51,
+        "min": 50,
+        "max": 55
+      },
+      "elapsed_ms": {
+        "median": 52.454135,
+        "min": 51.154141,
+        "max": 56.188816
+      },
+      "read_rows": {
+        "median": 1048605,
+        "min": 1048605,
+        "max": 1048605
+      },
+      "read_bytes": {
+        "median": 102128964,
+        "min": 102128964,
+        "max": 102128964
+      },
+      "memory_usage": {
+        "median": 9396875,
+        "min": 9396875,
+        "max": 9396907
+      }
+    },
+    "raw": {
+      "samples": 15,
+      "duration_ms": {
+        "median": 52,
+        "min": 51,
+        "max": 73
+      },
+      "elapsed_ms": {
+        "median": 53.972192,
+        "min": 52.876295,
+        "max": 74.421021
+      },
+      "read_rows": {
+        "median": 835655,
+        "min": 835655,
+        "max": 835655
+      },
+      "read_bytes": {
+        "median": 70202751,
+        "min": 70202751,
+        "max": 70202751
+      },
+      "memory_usage": {
+        "median": 10274202,
+        "min": 10274202,
+        "max": 10278174
+      }
+    },
+    "aggregate": {
+      "samples": 15,
+      "duration_ms": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "elapsed_ms": {
+        "median": 2.705401,
+        "min": 2.622334,
+        "max": 2.905981
+      },
+      "read_rows": {
+        "median": 109,
+        "min": 109,
+        "max": 109
+      },
+      "read_bytes": {
+        "median": 15698,
+        "min": 15698,
+        "max": 15698
+      },
+      "memory_usage": {
+        "median": 4225266,
+        "min": 4224314,
+        "max": 4229370
+      }
+    }
+  },
+  "improvement_vs_baseline": {
+    "raw": {
+      "duration_ms_ratio_baseline_over_optimized": 0.9808,
+      "elapsed_ms_ratio_baseline_over_optimized": 0.9719,
+      "read_rows_ratio_baseline_over_optimized": 1.2548,
+      "read_bytes_ratio_baseline_over_optimized": 1.4548
+    },
+    "aggregate": {
+      "duration_ms_ratio_baseline_over_optimized": 51.0,
+      "elapsed_ms_ratio_baseline_over_optimized": 19.3887,
+      "read_rows_ratio_baseline_over_optimized": 9620.2294,
+      "read_bytes_ratio_baseline_over_optimized": 6505.8583
+    }
+  },
+  "storage_after": {
+    "scope": "active parts for whole tables, including all loaded datasets; physical aggregate rows may merge",
+    "tables": {
+      "state_max": {
+        "physical_rows": 109,
+        "data_compressed_bytes": 5766,
+        "data_uncompressed_bytes": 18648,
+        "bytes_on_disk": 5884,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 51
+      },
+      "transactions": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 72906868,
+        "data_uncompressed_bytes": 174770007,
+        "bytes_on_disk": 72959534,
+        "active_parts": 15,
+        "rows_for_selected_dataset": 786431
+      },
+      "transactions_baseline": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 150195239,
+        "data_uncompressed_bytes": 255485572,
+        "bytes_on_disk": 150207553,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 786431
+      }
+    }
+  },
+  "finished_at_utc": "2026-10-05T19:11:10.215508+00:00",
+  "status": "passed"
+}
+ Container fraud-analytics-hw2-benchmark-run-ba20d1fd2125 Creating 
+ Container fraud-analytics-hw2-benchmark-run-ba20d1fd2125 Created 
+Compacting only fraud.transactions_baseline, fraud.transactions and fraud.state_max
+Completed benchmark round 1/15
+Completed benchmark round 2/15
+Completed benchmark round 3/15
+Completed benchmark round 4/15
+Completed benchmark round 5/15
+Completed benchmark round 6/15
+Completed benchmark round 7/15
+Completed benchmark round 8/15
+Completed benchmark round 9/15
+Completed benchmark round 10/15
+Completed benchmark round 11/15
+Completed benchmark round 12/15
+Completed benchmark round 13/15
+Completed benchmark round 14/15
+Completed benchmark round 15/15
+{
+  "dataset": "test",
+  "run_id": "4d424407d4624ebdb8cf0130123b9a89",
+  "started_at_utc": "2026-10-05T19:11:11.132306+00:00",
+  "repetitions_per_query": 15,
+  "warmup_runs_per_query": 1,
+  "random_order_seed": 20261005,
+  "query_settings": {
+    "max_threads": 2,
+    "use_query_cache": 0,
+    "log_queries": 1,
+    "log_queries_probability": 1,
+    "log_queries_min_query_duration_ms": 0
+  },
+  "method": "warm-cache single-node; sequential queries in a deterministically shuffled order each round",
+  "global_caches_dropped": false,
+  "compacted_before_run": true,
+  "compaction_scope": [
+    "fraud.transactions_baseline",
+    "fraud.transactions",
+    "fraud.state_max"
+  ],
+  "client_python": "3.11.11",
+  "client_platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+  "caveats": [
+    "Duration depends on hardware, other workloads, merges and the loaded datasets.",
+    "Server query_duration_ms has millisecond resolution; very small timings may be zero.",
+    "Client elapsed_ms includes HTTP transport; it is reported separately from server duration_ms.",
+    "The aggregate table accelerates this specific query and adds storage and ingestion work."
+  ],
+  "server": {
+    "version": "25.3.6.56",
+    "hostname": "a3e909c9e6c5",
+    "timezone": "UTC"
+  },
+  "server_resource_metrics": [
+    {
+      "metric": "CGroupMemoryTotal",
+      "value": 0
+    },
+    {
+      "metric": "OSMemoryAvailable",
+      "value": 13928886272
+    },
+    {
+      "metric": "OSMemoryTotal",
+      "value": 16322211840
+    }
+  ],
+  "storage_before": {
+    "scope": "active parts for whole tables, including all loaded datasets; physical aggregate rows may merge",
+    "tables": {
+      "state_max": {
+        "physical_rows": 109,
+        "data_compressed_bytes": 5766,
+        "data_uncompressed_bytes": 18648,
+        "bytes_on_disk": 5884,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 51
+      },
+      "transactions": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 72908786,
+        "data_uncompressed_bytes": 174768175,
+        "bytes_on_disk": 72961476,
+        "active_parts": 15,
+        "rows_for_selected_dataset": 262144
+      },
+      "transactions_baseline": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 150195239,
+        "data_uncompressed_bytes": 255485572,
+        "bytes_on_disk": 150207553,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 262144
+      }
+    }
+  },
+  "state_count": 51,
+  "samples_file": "benchmark_samples_test.csv",
+  "summary": {
+    "baseline": {
+      "samples": 15,
+      "duration_ms": {
+        "median": 21,
+        "min": 20,
+        "max": 22
+      },
+      "elapsed_ms": {
+        "median": 22.12102,
+        "min": 21.52683,
+        "max": 23.14854
+      },
+      "read_rows": {
+        "median": 1048605,
+        "min": 1048605,
+        "max": 1048605
+      },
+      "read_bytes": {
+        "median": 43654036,
+        "min": 43654036,
+        "max": 43654036
+      },
+      "memory_usage": {
+        "median": 8443635,
+        "min": 8443635,
+        "max": 8443667
+      }
+    },
+    "raw": {
+      "samples": 15,
+      "duration_ms": {
+        "median": 21,
+        "min": 21,
+        "max": 23
+      },
+      "elapsed_ms": {
+        "median": 22.754001,
+        "min": 22.338151,
+        "max": 24.424122
+      },
+      "read_rows": {
+        "median": 335830,
+        "min": 335830,
+        "max": 335830
+      },
+      "read_bytes": {
+        "median": 24248438,
+        "min": 24248438,
+        "max": 24248438
+      },
+      "memory_usage": {
+        "median": 5805623,
+        "min": 5805623,
+        "max": 10226934
+      }
+    },
+    "aggregate": {
+      "samples": 15,
+      "duration_ms": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "elapsed_ms": {
+        "median": 2.675092,
+        "min": 2.575371,
+        "max": 2.831915
+      },
+      "read_rows": {
+        "median": 109,
+        "min": 109,
+        "max": 109
+      },
+      "read_bytes": {
+        "median": 15698,
+        "min": 15698,
+        "max": 15698
+      },
+      "memory_usage": {
+        "median": 4225266,
+        "min": 4224538,
+        "max": 4229370
+      }
+    }
+  },
+  "improvement_vs_baseline": {
+    "raw": {
+      "duration_ms_ratio_baseline_over_optimized": 1.0,
+      "elapsed_ms_ratio_baseline_over_optimized": 0.9722,
+      "read_rows_ratio_baseline_over_optimized": 3.1224,
+      "read_bytes_ratio_baseline_over_optimized": 1.8003
+    },
+    "aggregate": {
+      "duration_ms_ratio_baseline_over_optimized": 21.0,
+      "elapsed_ms_ratio_baseline_over_optimized": 8.2693,
+      "read_rows_ratio_baseline_over_optimized": 9620.2294,
+      "read_bytes_ratio_baseline_over_optimized": 2780.8661
+    }
+  },
+  "storage_after": {
+    "scope": "active parts for whole tables, including all loaded datasets; physical aggregate rows may merge",
+    "tables": {
+      "state_max": {
+        "physical_rows": 109,
+        "data_compressed_bytes": 5766,
+        "data_uncompressed_bytes": 18648,
+        "bytes_on_disk": 5884,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 51
+      },
+      "transactions": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 72908786,
+        "data_uncompressed_bytes": 174768175,
+        "bytes_on_disk": 72961476,
+        "active_parts": 15,
+        "rows_for_selected_dataset": 262144
+      },
+      "transactions_baseline": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 150195239,
+        "data_uncompressed_bytes": 255485572,
+        "bytes_on_disk": 150207553,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 262144
+      }
+    }
+  },
+  "finished_at_utc": "2026-10-05T19:11:13.125899+00:00",
+  "status": "passed"
+}
+Full dataset verification and benchmarks passed. See results/.

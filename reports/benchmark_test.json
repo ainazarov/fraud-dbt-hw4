@@ -1,0 +1,212 @@
+{
+  "dataset": "test",
+  "run_id": "4d424407d4624ebdb8cf0130123b9a89",
+  "started_at_utc": "2026-10-05T19:11:11.132306+00:00",
+  "repetitions_per_query": 15,
+  "warmup_runs_per_query": 1,
+  "random_order_seed": 20261005,
+  "query_settings": {
+    "max_threads": 2,
+    "use_query_cache": 0,
+    "log_queries": 1,
+    "log_queries_probability": 1,
+    "log_queries_min_query_duration_ms": 0
+  },
+  "method": "warm-cache single-node; sequential queries in a deterministically shuffled order each round",
+  "global_caches_dropped": false,
+  "compacted_before_run": true,
+  "compaction_scope": [
+    "fraud.transactions_baseline",
+    "fraud.transactions",
+    "fraud.state_max"
+  ],
+  "client_python": "3.11.11",
+  "client_platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+  "caveats": [
+    "Duration depends on hardware, other workloads, merges and the loaded datasets.",
+    "Server query_duration_ms has millisecond resolution; very small timings may be zero.",
+    "Client elapsed_ms includes HTTP transport; it is reported separately from server duration_ms.",
+    "The aggregate table accelerates this specific query and adds storage and ingestion work."
+  ],
+  "server": {
+    "version": "25.3.6.56",
+    "hostname": "a3e909c9e6c5",
+    "timezone": "UTC"
+  },
+  "server_resource_metrics": [
+    {
+      "metric": "CGroupMemoryTotal",
+      "value": 0
+    },
+    {
+      "metric": "OSMemoryAvailable",
+      "value": 13928886272
+    },
+    {
+      "metric": "OSMemoryTotal",
+      "value": 16322211840
+    }
+  ],
+  "storage_before": {
+    "scope": "active parts for whole tables, including all loaded datasets; physical aggregate rows may merge",
+    "tables": {
+      "state_max": {
+        "physical_rows": 109,
+        "data_compressed_bytes": 5766,
+        "data_uncompressed_bytes": 18648,
+        "bytes_on_disk": 5884,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 51
+      },
+      "transactions": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 72908786,
+        "data_uncompressed_bytes": 174768175,
+        "bytes_on_disk": 72961476,
+        "active_parts": 15,
+        "rows_for_selected_dataset": 262144
+      },
+      "transactions_baseline": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 150195239,
+        "data_uncompressed_bytes": 255485572,
+        "bytes_on_disk": 150207553,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 262144
+      }
+    }
+  },
+  "state_count": 51,
+  "samples_file": "benchmark_samples_test.csv",
+  "summary": {
+    "baseline": {
+      "samples": 15,
+      "duration_ms": {
+        "median": 21,
+        "min": 20,
+        "max": 22
+      },
+      "elapsed_ms": {
+        "median": 22.12102,
+        "min": 21.52683,
+        "max": 23.14854
+      },
+      "read_rows": {
+        "median": 1048605,
+        "min": 1048605,
+        "max": 1048605
+      },
+      "read_bytes": {
+        "median": 43654036,
+        "min": 43654036,
+        "max": 43654036
+      },
+      "memory_usage": {
+        "median": 8443635,
+        "min": 8443635,
+        "max": 8443667
+      }
+    },
+    "raw": {
+      "samples": 15,
+      "duration_ms": {
+        "median": 21,
+        "min": 21,
+        "max": 23
+      },
+      "elapsed_ms": {
+        "median": 22.754001,
+        "min": 22.338151,
+        "max": 24.424122
+      },
+      "read_rows": {
+        "median": 335830,
+        "min": 335830,
+        "max": 335830
+      },
+      "read_bytes": {
+        "median": 24248438,
+        "min": 24248438,
+        "max": 24248438
+      },
+      "memory_usage": {
+        "median": 5805623,
+        "min": 5805623,
+        "max": 10226934
+      }
+    },
+    "aggregate": {
+      "samples": 15,
+      "duration_ms": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "elapsed_ms": {
+        "median": 2.675092,
+        "min": 2.575371,
+        "max": 2.831915
+      },
+      "read_rows": {
+        "median": 109,
+        "min": 109,
+        "max": 109
+      },
+      "read_bytes": {
+        "median": 15698,
+        "min": 15698,
+        "max": 15698
+      },
+      "memory_usage": {
+        "median": 4225266,
+        "min": 4224538,
+        "max": 4229370
+      }
+    }
+  },
+  "improvement_vs_baseline": {
+    "raw": {
+      "duration_ms_ratio_baseline_over_optimized": 1.0,
+      "elapsed_ms_ratio_baseline_over_optimized": 0.9722,
+      "read_rows_ratio_baseline_over_optimized": 3.1224,
+      "read_bytes_ratio_baseline_over_optimized": 1.8003
+    },
+    "aggregate": {
+      "duration_ms_ratio_baseline_over_optimized": 21.0,
+      "elapsed_ms_ratio_baseline_over_optimized": 8.2693,
+      "read_rows_ratio_baseline_over_optimized": 9620.2294,
+      "read_bytes_ratio_baseline_over_optimized": 2780.8661
+    }
+  },
+  "storage_after": {
+    "scope": "active parts for whole tables, including all loaded datasets; physical aggregate rows may merge",
+    "tables": {
+      "state_max": {
+        "physical_rows": 109,
+        "data_compressed_bytes": 5766,
+        "data_uncompressed_bytes": 18648,
+        "bytes_on_disk": 5884,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 51
+      },
+      "transactions": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 72908786,
+        "data_uncompressed_bytes": 174768175,
+        "bytes_on_disk": 72961476,
+        "active_parts": 15,
+        "rows_for_selected_dataset": 262144
+      },
+      "transactions_baseline": {
+        "physical_rows": 1048605,
+        "data_compressed_bytes": 150195239,
+        "data_uncompressed_bytes": 255485572,
+        "bytes_on_disk": 150207553,
+        "active_parts": 1,
+        "rows_for_selected_dataset": 262144
+      }
+    }
+  },
+  "finished_at_utc": "2026-10-05T19:11:13.125899+00:00",
+  "status": "passed"
+}

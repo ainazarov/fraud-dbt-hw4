@@ -1,0 +1,15 @@
+{
+  "dataset": "train",
+  "input_file": "/data/train.csv",
+  "input_sha256": "2fd291f0d66cbb1f3c3e442396f3725d4cbde650d5dd0c16322c5230d3776b99",
+  "input_bytes": 144559817,
+  "rows": 786431,
+  "enqueued": 786431,
+  "delivered": 786431,
+  "delivery_errors": 0,
+  "topic": "transactions",
+  "started_utc": "2026-10-05T19:10:40Z",
+  "finished_utc": "2026-10-05T19:10:42Z",
+  "elapsed_seconds": 2.089,
+  "transaction_id_scheme": "sha256(dataset + NUL + input_sha256 + NUL + row_number)"
+}

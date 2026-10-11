@@ -1,0 +1,14 @@
+Expression ((Project names + (Before ORDER BY + (Projection + (Change column names to column identifiers + (Project names + Projection)))) [lifted up part]))
+  Sorting (Sorting for ORDER BY)
+    Expression ((Before ORDER BY + (Projection + (Change column names to column identifiers + (Project names + Projection)))))
+      Aggregating
+        Expression (Before GROUP BY)
+          Expression
+            ReadFromMergeTree (fraud.state_max)
+            Indexes:
+              PrimaryKey
+                Keys: 
+                  dataset
+                Condition: (dataset in ['train', 'train'])
+                Parts: 1/1
+                Granules: 1/1

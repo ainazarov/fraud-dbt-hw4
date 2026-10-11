@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.csv text eol=lf
+# Preserve verbatim tool evidence, including ClickHouse/Compose trailing spaces.
+reports/*.log -whitespace
+reports/explain_*.txt -whitespace

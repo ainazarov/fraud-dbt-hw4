@@ -1,0 +1,42 @@
+{
+  "dataset": "train",
+  "started_at_utc": "2026-10-05T19:12:09.584884+00:00",
+  "status": "passed",
+  "source_file": "train.csv",
+  "source_sha256": "2fd291f0d66cbb1f3c3e442396f3725d4cbde650d5dd0c16322c5230d3776b99",
+  "source_sha256_scope": "entire input file, including when --limit is used",
+  "limit": null,
+  "expected_rows": 786431,
+  "state_count": 51,
+  "expected_null_targets": 0,
+  "tie_policy": "largest (amount, cat_id, transaction_id); exported category uses (amount, cat_id)",
+  "tables": {
+    "transactions_baseline": {
+      "rows": 786431,
+      "unique_transactions": 786431,
+      "unique_row_numbers": 786431,
+      "first_row": 1,
+      "last_row": 786431,
+      "null_targets": 0
+    },
+    "transactions": {
+      "rows": 786431,
+      "unique_transactions": 786431,
+      "unique_row_numbers": 786431,
+      "first_row": 1,
+      "last_row": 786431,
+      "null_targets": 0
+    }
+  },
+  "sample_rows_checked_per_table": 7,
+  "queries_verified": [
+    "baseline",
+    "raw",
+    "aggregate"
+  ],
+  "clickhouse_export": "max_by_state_train.csv",
+  "independent_reference_export": "reference_max_by_state_train.csv",
+  "clickhouse_version": "25.3.6.56",
+  "finished_at_utc": "2026-10-05T19:12:12.639104+00:00",
+  "elapsed_seconds": 3.054
+}

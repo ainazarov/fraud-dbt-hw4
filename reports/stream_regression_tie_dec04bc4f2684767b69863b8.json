@@ -1,0 +1,123 @@
+{
+  "passed": true,
+  "dataset": "tie_dec04bc4f2684767b69863b8",
+  "phases": [
+    {
+      "phase": "first_batch",
+      "manifest": {
+        "dataset": "tie_dec04bc4f2684767b69863b8",
+        "input_file": "/tmp/hw2-stream-test-gyis3ru7/first.csv",
+        "input_sha256": "a16d58cd4b69c42eae53ba5cebdc41a6005ae26eeca4b323711d1920e9944e26",
+        "input_bytes": 450,
+        "rows": 2,
+        "enqueued": 2,
+        "delivered": 2,
+        "delivery_errors": 0,
+        "topic": "transactions",
+        "started_utc": "2026-10-05T19:09:34Z",
+        "finished_utc": "2026-10-05T19:09:34Z",
+        "elapsed_seconds": 0.005,
+        "transaction_id_scheme": "sha256(dataset + NUL + input_sha256 + NUL + row_number)"
+      },
+      "counts": [
+        {
+          "storage": "baseline",
+          "physical_rows": "2",
+          "distinct_transactions": "2"
+        },
+        {
+          "storage": "raw",
+          "physical_rows": "2",
+          "distinct_transactions": "2"
+        }
+      ],
+      "winner": {
+        "us_state": "TX",
+        "cat_id": "a",
+        "max_amount": "200.00",
+        "transaction_id": "9a11c0ab0e75f18e9a3383d047e3ed722dfe15882a6193aeb47798dda77d6236"
+      }
+    },
+    {
+      "phase": "later_tied_batch",
+      "manifest": {
+        "dataset": "tie_dec04bc4f2684767b69863b8",
+        "input_file": "/tmp/hw2-stream-test-gyis3ru7/second.csv",
+        "input_sha256": "6400669b4ab2fc196165c7c496689ff60d5857c6e422b7c4bcf1bd00ea620d9b",
+        "input_bytes": 450,
+        "rows": 2,
+        "enqueued": 2,
+        "delivered": 2,
+        "delivery_errors": 0,
+        "topic": "transactions",
+        "started_utc": "2026-10-05T19:09:35Z",
+        "finished_utc": "2026-10-05T19:09:35Z",
+        "elapsed_seconds": 0.005,
+        "transaction_id_scheme": "sha256(dataset + NUL + input_sha256 + NUL + row_number)"
+      },
+      "counts": [
+        {
+          "storage": "raw",
+          "physical_rows": "4",
+          "distinct_transactions": "4"
+        },
+        {
+          "storage": "baseline",
+          "physical_rows": "4",
+          "distinct_transactions": "4"
+        }
+      ],
+      "winner": {
+        "us_state": "TX",
+        "cat_id": "z",
+        "max_amount": "200.00",
+        "transaction_id": "4b971318f3cfb042f1955b72e15f774f275def3be3b0004cfb89a6f5c2be6abf"
+      }
+    },
+    {
+      "phase": "explicit_replay",
+      "manifest": {
+        "dataset": "tie_dec04bc4f2684767b69863b8",
+        "input_file": "/tmp/hw2-stream-test-gyis3ru7/second.csv",
+        "input_sha256": "6400669b4ab2fc196165c7c496689ff60d5857c6e422b7c4bcf1bd00ea620d9b",
+        "input_bytes": 450,
+        "rows": 2,
+        "enqueued": 2,
+        "delivered": 2,
+        "delivery_errors": 0,
+        "topic": "transactions",
+        "started_utc": "2026-10-05T19:09:37Z",
+        "finished_utc": "2026-10-05T19:09:37Z",
+        "elapsed_seconds": 0.004,
+        "transaction_id_scheme": "sha256(dataset + NUL + input_sha256 + NUL + row_number)"
+      },
+      "counts": [
+        {
+          "storage": "raw",
+          "physical_rows": "6",
+          "distinct_transactions": "4"
+        },
+        {
+          "storage": "baseline",
+          "physical_rows": "6",
+          "distinct_transactions": "4"
+        }
+      ],
+      "winner": {
+        "us_state": "TX",
+        "cat_id": "z",
+        "max_amount": "200.00",
+        "transaction_id": "4b971318f3cfb042f1955b72e15f774f275def3be3b0004cfb89a6f5c2be6abf"
+      }
+    }
+  ],
+  "checks": [
+    "amount_precedes_category",
+    "later_tie_updates_winner",
+    "transaction_id_breaks_full_tie",
+    "all_three_queries_agree",
+    "explicit_replay_preserves_max",
+    "replay_is_not_exactly_once"
+  ],
+  "merge_control": "No OPTIMIZE or merge waiting; queried as soon as ingestion completed."
+}

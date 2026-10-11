@@ -1,0 +1,11 @@
+*
+!requirements.txt
+!scripts/
+!scripts/**
+!tests/
+!tests/**
+!sql/
+!sql/**
+!data/
+!data/demo.csv
+**/__pycache__

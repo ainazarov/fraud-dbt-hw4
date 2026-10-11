@@ -1,0 +1,42 @@
+{
+  "dataset": "demo",
+  "started_at_utc": "2026-10-05T19:09:33.834184+00:00",
+  "status": "passed",
+  "source_file": "demo.csv",
+  "source_sha256": "6c1f27fc54bd11eba73ab1ab65e8c7380c51e3509090c157a9e4a66fd8959d20",
+  "source_sha256_scope": "entire input file, including when --limit is used",
+  "limit": null,
+  "expected_rows": 24,
+  "state_count": 6,
+  "expected_null_targets": 0,
+  "tie_policy": "largest (amount, cat_id, transaction_id); exported category uses (amount, cat_id)",
+  "tables": {
+    "transactions_baseline": {
+      "rows": 24,
+      "unique_transactions": 24,
+      "unique_row_numbers": 24,
+      "first_row": 1,
+      "last_row": 24,
+      "null_targets": 0
+    },
+    "transactions": {
+      "rows": 24,
+      "unique_transactions": 24,
+      "unique_row_numbers": 24,
+      "first_row": 1,
+      "last_row": 24,
+      "null_targets": 0
+    }
+  },
+  "sample_rows_checked_per_table": 5,
+  "queries_verified": [
+    "baseline",
+    "raw",
+    "aggregate"
+  ],
+  "clickhouse_export": "max_by_state_demo.csv",
+  "independent_reference_export": "reference_max_by_state_demo.csv",
+  "clickhouse_version": "25.3.6.56",
+  "finished_at_utc": "2026-10-05T19:09:33.883948+00:00",
+  "elapsed_seconds": 0.05
+}

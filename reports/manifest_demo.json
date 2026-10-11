@@ -1,0 +1,15 @@
+{
+  "dataset": "demo",
+  "input_file": "/app/data/demo.csv",
+  "input_sha256": "6c1f27fc54bd11eba73ab1ab65e8c7380c51e3509090c157a9e4a66fd8959d20",
+  "input_bytes": 3965,
+  "rows": 24,
+  "enqueued": 24,
+  "delivered": 24,
+  "delivery_errors": 0,
+  "topic": "transactions",
+  "started_utc": "2026-10-05T19:08:28Z",
+  "finished_utc": "2026-10-05T19:08:28Z",
+  "elapsed_seconds": 0.039,
+  "transaction_id_scheme": "sha256(dataset + NUL + input_sha256 + NUL + row_number)"
+}
