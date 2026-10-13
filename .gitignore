@@ -9,3 +9,6 @@ results/*
 !results/.gitkeep
 runs/
 *.tar.gz
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/

@@ -1,0 +1,43 @@
+version: 2
+
+unit_tests:
+  - name: staging_amount_bucket_boundaries
+    description: "Zero, exact boundaries and adjacent cents exercise the custom amount macro."
+    model: stg_transactions
+    given:
+      - input: source('transactions_db', 'transactions')
+        rows:
+          - {transaction_id: a0, amount: '0.00'}
+          - {transaction_id: a1, amount: '99.99'}
+          - {transaction_id: a2, amount: '100.00'}
+          - {transaction_id: a3, amount: '499.99'}
+          - {transaction_id: a4, amount: '500.00'}
+          - {transaction_id: a5, amount: '500.01'}
+    expect:
+      rows:
+        - {transaction_id: a0, amount: '0.00', amount_bucket: SMALL}
+        - {transaction_id: a1, amount: '99.99', amount_bucket: SMALL}
+        - {transaction_id: a2, amount: '100.00', amount_bucket: MEDIUM}
+        - {transaction_id: a3, amount: '499.99', amount_bucket: MEDIUM}
+        - {transaction_id: a4, amount: '500.00', amount_bucket: LARGE}
+        - {transaction_id: a5, amount: '500.01', amount_bucket: LARGE}
+
+  - name: staging_normalization_identity_and_utc_boundaries
+    description: >-
+      Whitespace and case normalize consistently, blank merchant/category have explicit
+      fallback values, Sunday rolls into Monday at UTC midnight, and delimiter-containing
+      names produce distinct length-prefixed customer keys.
+    model: stg_transactions
+    given:
+      - input: source('transactions_db', 'transactions')
+        rows:
+          - {transaction_id: n1, name_1: ' Ann ', name_2: ' LEE ', street: ' 1 MAIN ', post_code: '12345', merch: ' SHOP ', cat_id: ' HOME ', us_state: ' ca ', gender: ' f ', target: 1, transaction_time: '2024-01-07 23:59:59'}
+          - {transaction_id: n2, name_1: ann, name_2: lee, street: '1 main', post_code: '12345', merch: ' ', cat_id: ' ', us_state: CA, gender: F, target: 0, transaction_time: '2024-01-08 00:00:00'}
+          - {transaction_id: n3, name_1: a-b, name_2: c, street: '1 main', post_code: '12345', merch: SHOP, cat_id: HOME, us_state: CA, gender: F, target: 0, transaction_time: '2024-01-08 00:00:00'}
+          - {transaction_id: n4, name_1: a, name_2: b-c, street: '1 main', post_code: '12345', merch: SHOP, cat_id: HOME, us_state: CA, gender: F, target: 0, transaction_time: '2024-01-08 00:00:00'}
+    expect:
+      rows:
+        - {transaction_id: n1, merchant: shop, category: home, state: CA, gender: F, is_fraud: 1, weekday_iso: 7, transaction_hour: 23, transaction_date: '2024-01-07', customer_id: 6be2ec5d4bdf1a1cce46c6db94cb4cfa}
+        - {transaction_id: n2, merchant: unknown, category: unknown, state: CA, gender: F, is_fraud: 0, weekday_iso: 1, transaction_hour: 0, transaction_date: '2024-01-08', customer_id: 6be2ec5d4bdf1a1cce46c6db94cb4cfa}
+        - {transaction_id: n3, merchant: shop, category: home, state: CA, gender: F, is_fraud: 0, weekday_iso: 1, transaction_hour: 0, transaction_date: '2024-01-08', customer_id: 6dbe84098d873782c08d620862782af2}
+        - {transaction_id: n4, merchant: shop, category: home, state: CA, gender: F, is_fraud: 0, weekday_iso: 1, transaction_hour: 0, transaction_date: '2024-01-08', customer_id: 5accc1075c594e1fa3b1ca228a7a7173}
