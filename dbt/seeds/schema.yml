@@ -1,0 +1,16 @@
+version: 2
+
+seeds:
+  - name: states
+    description: "The 50 US states and District of Columbia; static reference for state-code validation."
+    columns:
+      - name: state_code
+        description: "Two-letter USPS state or district abbreviation."
+        data_tests:
+          - not_null
+          - unique
+      - name: state_name
+        description: "Full state or district name."
+        data_tests:
+          - not_null
+          - unique

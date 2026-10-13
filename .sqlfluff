@@ -1,0 +1,25 @@
+[sqlfluff]
+dialect = clickhouse
+templater = dbt
+max_line_length = 100
+# ClickHouse function names such as countIf are case-sensitive.
+exclude_rules = CP03
+
+[sqlfluff:templater:dbt]
+project_dir = ./dbt
+profiles_dir = ./dbt
+profile = fraud_hw4
+target = dev
+dbt_skip_compilation_error = False
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.functions]
+extended_capitalisation_policy = consistent
+
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = lower
+
+[sqlfluff:rules:references.keywords]
+ignore_words = state,row_number

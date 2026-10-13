@@ -1,0 +1,176 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    description: >-
+      One cleaned transaction per source row. Text is trimmed and normalized, money stays
+      decimal, all temporal fields use UTC, and labels are preserved. Customer identity
+      is a deterministic proxy from four source attributes, encoded with character-length
+      prefixes before hashing to avoid ambiguous concatenations. No rows are silently dropped.
+    columns:
+      - name: transaction_id
+        description: "Unique deterministic transaction identifier."
+        data_tests:
+          - not_null
+          - unique
+      - name: dataset
+        description: "Snapshot origin, demo or train."
+        data_tests:
+          - not_null
+      - name: row_number
+        description: "One-based original CSV row number."
+        data_tests:
+          - not_null
+      - name: transaction_time
+        description: "Transaction timestamp normalized to UTC."
+        data_tests:
+          - not_null
+      - name: transaction_date
+        description: "Calendar date in UTC."
+        data_tests:
+          - not_null
+      - name: weekday_iso
+        description: "UTC weekday: Monday=1 through Sunday=7."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1,2,3,4,5,6,7]
+                quote: false
+      - name: transaction_hour
+        description: "Hour in UTC, from 0 through 23."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 23
+      - name: merchant
+        description: "Trimmed lower-case merchant; blank names become unknown."
+        data_tests:
+          - not_null
+      - name: category
+        description: "Trimmed lower-case spending category; blank values become unknown."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - entertainment
+                  - food_dining
+                  - gas_transport
+                  - grocery_net
+                  - grocery_pos
+                  - health_fitness
+                  - home
+                  - kids_pets
+                  - misc_net
+                  - misc_pos
+                  - personal_care
+                  - shopping_net
+                  - shopping_pos
+                  - travel
+                  - unknown
+      - name: amount
+        description: "Exact transaction value stored as Decimal(18, 2); no floating-point conversion."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: customer_id
+        description: "dbt_utils MD5 of length-prefixed normalized first name, last name, street and postal code. This proxy is not a real customer identifier and can merge different people sharing those attributes."
+        data_tests:
+          - not_null
+      - name: first_name
+        description: "Trimmed lower-case given name used in customer identity."
+        data_tests:
+          - not_null
+      - name: last_name
+        description: "Trimmed lower-case family name used in customer identity."
+        data_tests:
+          - not_null
+      - name: gender
+        description: "Trimmed upper-case source gender code."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["M","F"]
+                quote: true
+      - name: street
+        description: "Trimmed lower-case street address used in customer identity."
+        data_tests:
+          - not_null
+      - name: city
+        description: "Trimmed lower-case customer city."
+        data_tests:
+          - not_null
+      - name: state
+        description: "Trimmed upper-case US postal state code, including DC."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('states')
+                field: state_code
+      - name: postal_code
+        description: "Trimmed text postal code, retaining leading zeroes."
+        data_tests:
+          - not_null
+      - name: lat
+        description: "Customer latitude."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -90
+                max_value: 90
+      - name: lon
+        description: "Customer longitude."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -180
+                max_value: 180
+      - name: city_population
+        description: "Population of the customer city."
+        data_tests:
+          - not_null
+      - name: job
+        description: "Trimmed lower-case occupation."
+        data_tests:
+          - not_null
+      - name: merchant_lat
+        description: "Merchant latitude."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -90
+                max_value: 90
+      - name: merchant_lon
+        description: "Merchant longitude."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -180
+                max_value: 180
+      - name: is_fraud
+        description: "Observed binary label: 1 fraudulent, 0 legitimate."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0,1]
+                quote: false
+      - name: amount_bucket
+        description: "SMALL below 100; MEDIUM from 100 inclusive to 500 exclusive; LARGE at least 500."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["SMALL","MEDIUM","LARGE"]
+                quote: true

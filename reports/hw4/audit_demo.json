@@ -1,0 +1,135 @@
+{
+  "passed": true,
+  "dataset": "demo",
+  "input_sha256": "6c1f27fc54bd11eba73ab1ab65e8c7380c51e3509090c157a9e4a66fd8959d20",
+  "rows": 24,
+  "fraud_count": 5,
+  "total_amount": "9136.35",
+  "fraud_amount": "5300.65",
+  "approximate_absolute_tolerance": "1e-7",
+  "approximate_relative_tolerance": "1e-9",
+  "raw": {
+    "passed": true,
+    "mismatched_fields": [],
+    "observed": {
+      "transaction_count": "24",
+      "distinct_ids": "24",
+      "distinct_row_numbers": "24",
+      "first_row": "1",
+      "last_row": "24",
+      "total_amount": "9136.35",
+      "fraud_count": "5",
+      "fraud_amount": "5300.65",
+      "invalid_labels": "0",
+      "wrong_dataset": "0",
+      "invalid_ids": "0",
+      "id_checksum": "7039359093738974850"
+    },
+    "expected": {
+      "transaction_count": 24,
+      "distinct_ids": 24,
+      "distinct_row_numbers": 24,
+      "first_row": 1,
+      "last_row": 24,
+      "total_amount": "9136.35",
+      "fraud_count": 5,
+      "fraud_amount": "5300.65",
+      "invalid_labels": 0,
+      "wrong_dataset": 0,
+      "invalid_ids": 0
+    }
+  },
+  "staging": {
+    "passed": true,
+    "mismatched_fields": [],
+    "observed": {
+      "transaction_count": "24",
+      "distinct_ids": "24",
+      "distinct_row_numbers": "24",
+      "first_row": "1",
+      "last_row": "24",
+      "total_amount": "9136.35",
+      "fraud_count": "5",
+      "fraud_amount": "5300.65",
+      "invalid_labels": "0",
+      "wrong_dataset": "0",
+      "invalid_ids": "0",
+      "id_checksum": "7039359093738974850"
+    },
+    "expected": {
+      "transaction_count": 24,
+      "distinct_ids": 24,
+      "distinct_row_numbers": 24,
+      "first_row": 1,
+      "last_row": 24,
+      "total_amount": "9136.35",
+      "fraud_count": 5,
+      "fraud_amount": "5300.65",
+      "invalid_labels": 0,
+      "wrong_dataset": 0,
+      "invalid_ids": 0
+    }
+  },
+  "marts": {
+    "mart_daily_state_metrics": {
+      "passed": true,
+      "expected_groups": 24,
+      "observed_groups": 24,
+      "missing_groups": 0,
+      "extra_groups": 0,
+      "duplicate_keys": 0,
+      "metrics_compared": 192,
+      "mismatched_metric_counts": {}
+    },
+    "mart_fraud_by_category": {
+      "passed": true,
+      "expected_groups": 11,
+      "observed_groups": 11,
+      "missing_groups": 0,
+      "extra_groups": 0,
+      "duplicate_keys": 0,
+      "metrics_compared": 55,
+      "mismatched_metric_counts": {}
+    },
+    "mart_fraud_by_state": {
+      "passed": true,
+      "expected_groups": 6,
+      "observed_groups": 6,
+      "missing_groups": 0,
+      "extra_groups": 0,
+      "duplicate_keys": 0,
+      "metrics_compared": 42,
+      "mismatched_metric_counts": {}
+    },
+    "mart_customer_risk_profile": {
+      "passed": true,
+      "expected_groups": 24,
+      "observed_groups": 24,
+      "missing_groups": 0,
+      "extra_groups": 0,
+      "duplicate_keys": 0,
+      "metrics_compared": 216,
+      "mismatched_metric_counts": {}
+    },
+    "mart_hourly_fraud_pattern": {
+      "passed": true,
+      "expected_groups": 24,
+      "observed_groups": 24,
+      "missing_groups": 0,
+      "extra_groups": 0,
+      "duplicate_keys": 0,
+      "metrics_compared": 144,
+      "mismatched_metric_counts": {}
+    },
+    "mart_merchant_analytics": {
+      "passed": true,
+      "expected_groups": 20,
+      "observed_groups": 20,
+      "missing_groups": 0,
+      "extra_groups": 0,
+      "duplicate_keys": 0,
+      "metrics_compared": 160,
+      "mismatched_metric_counts": {}
+    }
+  }
+}

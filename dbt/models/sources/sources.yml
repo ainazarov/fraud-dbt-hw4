@@ -1,0 +1,69 @@
+version: 2
+
+sources:
+  - name: transactions_db
+    schema: transactions_db
+    description: >-
+      Project-owned raw database. The loader atomically replaces one complete labelled
+      snapshot; demo and train are never mixed. Imported rows retain HW2 source columns.
+    tables:
+      - name: transactions
+        description: One row per labelled transaction; amounts use Decimal(12, 2) and timestamps use UTC.
+        columns:
+          - name: dataset
+            description: "Logical snapshot label: demo or train."
+          - name: transaction_id
+            description: "Deterministic unique source transaction identifier."
+            data_tests:
+              - not_null
+              - unique
+          - name: row_number
+            description: "One-based input CSV row position."
+          - name: transaction_time
+            description: "Source transaction timestamp interpreted in UTC."
+            data_tests:
+              - not_null
+          - name: merch
+            description: "Raw merchant name."
+          - name: cat_id
+            description: "Raw spending category."
+          - name: amount
+            description: "Exact transaction amount at two decimal places."
+            data_tests:
+              - not_null
+          - name: name_1
+            description: "Customer given name."
+          - name: name_2
+            description: "Customer family name."
+          - name: gender
+            description: "Source gender code."
+          - name: street
+            description: "Customer street address used in the synthetic identity."
+          - name: one_city
+            description: "Customer city."
+          - name: us_state
+            description: "US state or District of Columbia postal code."
+            data_tests:
+              - not_null
+          - name: post_code
+            description: "Postal code retained as text to preserve leading zeroes."
+          - name: lat
+            description: "Customer latitude."
+          - name: lon
+            description: "Customer longitude."
+          - name: population_city
+            description: "Population of the customer city."
+          - name: jobs
+            description: "Customer occupation."
+          - name: merchant_lat
+            description: "Merchant latitude."
+          - name: merchant_lon
+            description: "Merchant longitude."
+          - name: target
+            description: "Required observed label: 1 fraudulent, 0 legitimate. Unlabelled rows are rejected by the loader."
+            data_tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: [0, 1]
+                    quote: false

@@ -1,0 +1,385 @@
+version: 2
+
+models:
+  - name: mart_daily_state_metrics
+    description: "One row per UTC calendar date and state. P95 is ClickHouse quantileExact(0.95), the sorted zero-based index min(floor(0.95*N), N-1). Large transactions have amount at least 500."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["transaction_date","state"]
+    columns:
+      - name: transaction_date
+        description: "UTC calendar date."
+        data_tests:
+          - not_null
+      - name: state
+        description: "US postal state code, including DC."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('states')
+                field: state_code
+      - name: transaction_count
+        description: "Number of labelled transactions in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: fraud_count
+        description: "Number of transactions with observed label 1."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: total_amount
+        description: "Exact sum of all transaction amounts in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_amount
+        description: "Exact sum of amounts for observed fraudulent transactions."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_rate
+        description: "Fraudulent transactions divided by all transactions, expressed as a percentage from 0 to 100."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: avg_amount
+        description: "Arithmetic mean transaction amount."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: p95_amount
+        description: "Exact P95 amount using the documented upper order statistic."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: large_transaction_share
+        description: "Percentage of transactions with amount at least 500, from 0 to 100."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+  - name: mart_fraud_by_category
+    description: "One row per normalized spending category for comparing observed fraud prevalence and amounts."
+    columns:
+      - name: category
+        description: "Normalized spending category."
+        data_tests:
+          - not_null
+          - unique
+      - name: transaction_count
+        description: "Number of labelled transactions in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: fraud_count
+        description: "Number of transactions with observed label 1."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: total_amount
+        description: "Exact sum of all transaction amounts in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_amount
+        description: "Exact sum of amounts for observed fraudulent transactions."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_rate
+        description: "Fraudulent transactions divided by all transactions, expressed as a percentage from 0 to 100."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+  - name: mart_fraud_by_state
+    description: "One row per state with observed fraud prevalence and exact distinct customer-proxy and merchant counts."
+    columns:
+      - name: state
+        description: "US postal state code, including DC."
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('states')
+                field: state_code
+      - name: transaction_count
+        description: "Number of labelled transactions in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: fraud_count
+        description: "Number of transactions with observed label 1."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: total_amount
+        description: "Exact sum of all transaction amounts in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_amount
+        description: "Exact sum of amounts for observed fraudulent transactions."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_rate
+        description: "Fraudulent transactions divided by all transactions, expressed as a percentage from 0 to 100."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: customer_count
+        description: "Exact distinct synthetic customer identities in the state."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: merchant_count
+        description: "Exact distinct normalized merchants in the state."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+  - name: mart_customer_risk_profile
+    description: "One row per synthetic customer identity over the entire loaded snapshot. Risk is descriptive: HIGH at fraud_rate >=10%, MEDIUM at >=1% and <10%, otherwise LOW. It is not a predictive score and has no minimum-history requirement."
+    columns:
+      - name: customer_id
+        description: "Synthetic identity inherited from staging; identical personal/address attributes may represent different people."
+        data_tests:
+          - not_null
+          - unique
+      - name: transaction_count
+        description: "Number of labelled transactions in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: fraud_count
+        description: "Number of transactions with observed label 1."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: total_amount
+        description: "Exact sum of all transaction amounts in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_amount
+        description: "Exact sum of amounts for observed fraudulent transactions."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_rate
+        description: "Fraudulent transactions divided by all transactions, expressed as a percentage from 0 to 100."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: avg_amount
+        description: "Arithmetic mean transaction amount."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: first_transaction_time
+        description: "Earliest observed transaction timestamp in UTC."
+        data_tests:
+          - not_null
+      - name: last_transaction_time
+        description: "Latest observed transaction timestamp in UTC."
+        data_tests:
+          - not_null
+      - name: risk_level
+        description: "Descriptive fraud-rate band: HIGH >=10%, MEDIUM >=1%, LOW <1%."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["HIGH","MEDIUM","LOW"]
+                quote: true
+  - name: mart_hourly_fraud_pattern
+    description: "One row per observed UTC weekday/hour combination, aggregated over the entire snapshot. Empty windows are absent. Compare fraud_rate and transaction_count together when identifying high-risk windows."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["weekday_iso","transaction_hour"]
+    columns:
+      - name: weekday_iso
+        description: "UTC ISO weekday, Monday=1 through Sunday=7."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1,2,3,4,5,6,7]
+                quote: false
+      - name: transaction_hour
+        description: "Hour in UTC, 0 through 23."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 23
+      - name: transaction_count
+        description: "Number of labelled transactions in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: fraud_count
+        description: "Number of transactions with observed label 1."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: total_amount
+        description: "Exact sum of all transaction amounts in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_amount
+        description: "Exact sum of amounts for observed fraudulent transactions."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_rate
+        description: "Fraudulent transactions divided by all transactions, expressed as a percentage from 0 to 100."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: avg_amount
+        description: "Arithmetic mean transaction amount in this time window."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+  - name: mart_merchant_analytics
+    description: "One row per normalized merchant. is_suspicious flags at least two observed fraudulent transactions and a fraud rate of at least 5%."
+    columns:
+      - name: merchant
+        description: "Normalized merchant name."
+        data_tests:
+          - not_null
+          - unique
+      - name: transaction_count
+        description: "Number of labelled transactions in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: fraud_count
+        description: "Number of transactions with observed label 1."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: total_amount
+        description: "Exact sum of all transaction amounts in this group."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_amount
+        description: "Exact sum of amounts for observed fraudulent transactions."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: fraud_rate
+        description: "Fraudulent transactions divided by all transactions, expressed as a percentage from 0 to 100."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: avg_amount
+        description: "Arithmetic mean transaction amount."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: customer_count
+        description: "Exact number of synthetic customer identities transacting with this merchant."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: is_suspicious
+        description: "1 when fraud_count >=2 and fraud_rate >=5%; otherwise 0."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0,1]
+                quote: false

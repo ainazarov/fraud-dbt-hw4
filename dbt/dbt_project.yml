@@ -1,0 +1,35 @@
+name: fraud_hw4
+version: '1.0.0'
+config-version: 2
+profile: fraud_hw4
+require-dbt-version: [">=1.10.0", "<1.11.0"]
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+clean-targets: ["target", "dbt_packages", "logs"]
+
+vars:
+  "dbt_date:time_zone": UTC
+
+dispatch:
+  - macro_namespace: dbt_date
+    search_order: [fraud_hw4, dbt_date]
+
+models:
+  fraud_hw4:
+    +materialized: table
+    +engine: MergeTree()
+    +order_by: tuple()
+    staging:
+      +order_by: [transaction_date, state, transaction_id]
+    marts:
+      +tags: [mart]
+
+seeds:
+  fraud_hw4:
+    states:
+      +column_types:
+        state_code: String
+        state_name: String

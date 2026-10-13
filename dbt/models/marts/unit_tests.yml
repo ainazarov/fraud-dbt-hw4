@@ -1,0 +1,85 @@
+version: 2
+
+unit_tests:
+  - name: daily_exact_percentile_and_large_share
+    description: "Twenty ordered amounts establish the exact P95 convention and >=500 large share."
+    model: mart_daily_state_metrics
+    given:
+      - input: ref('stg_transactions')
+        format: sql
+        fixture: daily_exact_percentile
+    expect:
+      rows:
+        - {transaction_date: '2024-01-01', state: CA, transaction_count: 20, fraud_count: 1, total_amount: '19000.00', fraud_amount: '1900.00', fraud_rate: 5, avg_amount: 950, p95_amount: '1900.00', large_transaction_share: 75}
+
+  - name: category_decimal_sums_and_zero_fraud
+    description: "Decimal cents sum exactly, categories remain separate, and legitimate-only groups have zero fraud."
+    model: mart_fraud_by_category
+    given:
+      - input: ref('stg_transactions')
+        rows:
+          - {category: home, amount: '0.10', is_fraud: 0}
+          - {category: home, amount: '0.20', is_fraud: 1}
+          - {category: travel, amount: '0.00', is_fraud: 0}
+    expect:
+      rows:
+        - {category: home, transaction_count: 2, fraud_count: 1, total_amount: '0.30', fraud_amount: '0.20', fraud_rate: 50}
+        - {category: travel, transaction_count: 1, fraud_count: 0, total_amount: '0.00', fraud_amount: '0.00', fraud_rate: 0}
+
+  - name: state_exact_distinct_counts
+    description: "Repeated customer/merchant identities count once within each state."
+    model: mart_fraud_by_state
+    given:
+      - input: ref('stg_transactions')
+        rows:
+          - {state: CA, customer_id: alice, merchant: shop, amount: '100.00', is_fraud: 0}
+          - {state: CA, customer_id: alice, merchant: shop, amount: '200.00', is_fraud: 1}
+          - {state: CA, customer_id: bob, merchant: cafe, amount: '300.00', is_fraud: 0}
+          - {state: NY, customer_id: alice, merchant: shop, amount: '400.00', is_fraud: 0}
+    expect:
+      rows:
+        - {state: CA, transaction_count: 3, fraud_count: 1, total_amount: '600.00', fraud_amount: '200.00', customer_count: 2, merchant_count: 2}
+        - {state: NY, transaction_count: 1, fraud_count: 0, total_amount: '400.00', fraud_amount: '0.00', customer_count: 1, merchant_count: 1}
+
+  - name: customer_risk_inclusive_thresholds
+    description: "Exactly 10% is HIGH, exactly 1% is MEDIUM, adjacent lower rates select the next band."
+    model: mart_customer_risk_profile
+    given:
+      - input: ref('stg_transactions')
+        format: sql
+        fixture: customer_risk_boundaries
+    expect:
+      rows:
+        - {customer_id: high, transaction_count: 10, fraud_count: 1, total_amount: '100.00', avg_amount: 10, risk_level: HIGH, first_transaction_time: '2024-01-01 00:00:00', last_transaction_time: '2024-01-01 09:00:00'}
+        - {customer_id: medium, transaction_count: 100, fraud_count: 1, total_amount: '2000.00', avg_amount: 20, risk_level: MEDIUM, first_transaction_time: '2024-01-01 00:00:00', last_transaction_time: '2024-01-05 03:00:00'}
+        - {customer_id: low, transaction_count: 101, fraud_count: 1, total_amount: '3030.00', avg_amount: 30, risk_level: LOW, first_transaction_time: '2024-01-01 00:00:00', last_transaction_time: '2024-01-05 04:00:00'}
+        - {customer_id: just_below_high, transaction_count: 101, fraud_count: 10, total_amount: '4040.00', avg_amount: 40, risk_level: MEDIUM, first_transaction_time: '2024-01-01 00:00:00', last_transaction_time: '2024-01-05 04:00:00'}
+        - {customer_id: no_fraud, transaction_count: 1, fraud_count: 0, total_amount: '0.00', avg_amount: 0, risk_level: LOW, first_transaction_time: '2024-01-01 00:00:00', last_transaction_time: '2024-01-01 00:00:00'}
+
+  - name: hourly_weekday_and_hour_grain
+    description: "Sunday 23:00 and Monday 00:00 are distinct UTC windows with independent fraud rates."
+    model: mart_hourly_fraud_pattern
+    given:
+      - input: ref('stg_transactions')
+        rows:
+          - {weekday_iso: 7, transaction_hour: 23, amount: '10.00', is_fraud: 1}
+          - {weekday_iso: 1, transaction_hour: 0, amount: '20.00', is_fraud: 0}
+          - {weekday_iso: 1, transaction_hour: 0, amount: '40.00', is_fraud: 1}
+    expect:
+      rows:
+        - {weekday_iso: 7, transaction_hour: 23, transaction_count: 1, fraud_count: 1, total_amount: '10.00', fraud_amount: '10.00', fraud_rate: 100, avg_amount: 10}
+        - {weekday_iso: 1, transaction_hour: 0, transaction_count: 2, fraud_count: 1, total_amount: '60.00', fraud_amount: '40.00', fraud_rate: 50, avg_amount: 30}
+
+  - name: merchant_minimum_count_and_rate
+    description: "Both suspiciousness conditions apply; two frauds out of forty is the inclusive 5% boundary."
+    model: mart_merchant_analytics
+    given:
+      - input: ref('stg_transactions')
+        format: sql
+        fixture: merchant_suspicion_boundaries
+    expect:
+      rows:
+        - {merchant: at_threshold, transaction_count: 40, fraud_count: 2, total_amount: '400.00', customer_count: 1, is_suspicious: 1}
+        - {merchant: below_threshold, transaction_count: 41, fraud_count: 2, total_amount: '820.00', customer_count: 1, is_suspicious: 0}
+        - {merchant: one_fraud, transaction_count: 1, fraud_count: 1, total_amount: '30.00', customer_count: 1, is_suspicious: 0}
+        - {merchant: two_frauds, transaction_count: 2, fraud_count: 2, total_amount: '80.00', customer_count: 1, is_suspicious: 1}

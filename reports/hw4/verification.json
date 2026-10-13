@@ -1,0 +1,89 @@
+{
+  "verified_on": "2026-10-13",
+  "source_commit": "af9850089122b2b2ffc4cda228bd596e3d1c7d05",
+  "hw2_baseline": "158e00e3aba27cb76180379971a845f24d7bbf1f",
+  "versions": {
+    "dbt-core": "1.10.15",
+    "dbt-clickhouse": "1.9.8",
+    "sqlfluff": "3.4.2",
+    "pre-commit": "4.3.0",
+    "clickhouse": "25.3.6.56",
+    "docker_engine": "29.8.1"
+  },
+  "datasets": {
+    "demo": {
+      "input_sha256": "6c1f27fc54bd11eba73ab1ab65e8c7380c51e3509090c157a9e4a66fd8959d20",
+      "rows": 24,
+      "fraud_count": 5,
+      "total_amount": "9136.35",
+      "fraud_amount": "5300.65",
+      "dbt_statuses": {
+        "pass": 166
+      },
+      "data_tests_passed": 158,
+      "native_unit_tests_passed": 8,
+      "python_tests_passed_per_run": 45,
+      "sqlfluff_passes_per_run": 2,
+      "repeat_audit_identical": true,
+      "raw_identity_checksum_first": "7039359093738974850",
+      "raw_identity_checksum_repeat": "7039359093738974850",
+      "mart_groups": {
+        "mart_daily_state_metrics": 24,
+        "mart_fraud_by_category": 11,
+        "mart_fraud_by_state": 6,
+        "mart_customer_risk_profile": 24,
+        "mart_hourly_fraud_pattern": 24,
+        "mart_merchant_analytics": 20
+      },
+      "metric_values_compared": 809
+    },
+    "train": {
+      "input_sha256": "2fd291f0d66cbb1f3c3e442396f3725d4cbde650d5dd0c16322c5230d3776b99",
+      "rows": 786431,
+      "fraud_count": 4504,
+      "total_amount": "55239932.49",
+      "fraud_amount": "2386632.63",
+      "dbt_statuses": {
+        "pass": 166
+      },
+      "data_tests_passed": 158,
+      "native_unit_tests_passed": 8,
+      "python_tests_passed_per_run": 45,
+      "sqlfluff_passes_per_run": 2,
+      "repeat_audit_identical": true,
+      "raw_identity_checksum_first": "7519301929005830284",
+      "raw_identity_checksum_repeat": "7519301929005830284",
+      "mart_groups": {
+        "mart_daily_state_metrics": 21386,
+        "mart_fraud_by_category": 14,
+        "mart_fraud_by_state": 51,
+        "mart_customer_risk_profile": 965,
+        "mart_hourly_fraud_pattern": 168,
+        "mart_merchant_analytics": 693
+      },
+      "metric_values_compared": 186752
+    }
+  },
+  "isolation": {
+    "separate_fresh_demo_and_full_volumes": true,
+    "demo_volume_created_at": "2026-10-13T23:07:43+03:00",
+    "full_volume_created_at": "2026-10-13T23:09:32+03:00",
+    "only_new_volume": "fraud-dbt-hw4_clickhouse_data"
+  },
+  "precommit_hooks_passed": 3,
+  "live_import_failure_checks_passed": true,
+  "documentation": {
+    "models_with_column_descriptions": 7,
+    "catalog_relations": 8,
+    "catalog_sources": 1,
+    "generated_at": "2026-10-13T20:11:26.898605Z",
+    "artifact_sha256": {
+      "index.html": "98822311655171044cae10028d36e134b7511364014cf84044bd7bd627087113",
+      "manifest.json": "1232ad81e9c1e87401fe6cc71c05450482c2dde9cde468876fff69554eb9d4c5",
+      "catalog.json": "cc27ba6b0b8ee2c9494b9b95479edcf7bd95f370a46d70464cb6774f90f351bc"
+    },
+    "docs_serve_http_status": 200,
+    "dag_screenshot": "dbt-docs-dag.jpg",
+    "dag_screenshot_sha256": "5f4fa1815c029ea7b621c438405a25bd96ad81c275872d409dd14fd0398548a8"
+  }
+}

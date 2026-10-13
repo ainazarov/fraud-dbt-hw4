@@ -1,0 +1,30 @@
+version: 2
+
+macros:
+  - name: amount_bucket
+    description: "Segment nonnegative decimal amounts: SMALL <100, MEDIUM >=100 and <500, LARGE >=500."
+    arguments:
+      - name: expression
+        type: string
+        description: "SQL expression containing the transaction amount."
+  - name: customer_key
+    description: >-
+      Encode each normalized non-null identity component with its Unicode character
+      length and a colon, join components with pipes, then hash the complete encoding
+      with dbt_utils.generate_surrogate_key. Length prefixes prevent delimiter ambiguity.
+    arguments:
+      - name: columns
+        type: list
+        description: "Ordered SQL expressions for normalized first name, last name, street, and postal code."
+  - name: clickhouse__day_of_week
+    description: >-
+      ClickHouse adapter dispatch for dbt_date.day_of_week. Mode 0 gives Monday=1
+      through Sunday=7; mode 3 gives Sunday=1 through Saturday=7. The staging model
+      requests ISO weekdays from its UTC timestamp.
+    arguments:
+      - name: date
+        type: string
+        description: "SQL date or timestamp expression."
+      - name: isoweek
+        type: boolean
+        description: "True for Monday-first ISO weekdays; false for Sunday-first weekdays."
