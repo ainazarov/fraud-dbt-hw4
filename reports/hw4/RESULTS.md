@@ -1,25 +1,23 @@
-# HW4 verification
+# HW4 results
 
-Verified on 2026-10-13 from a fresh Git bundle clone of implementation commit `af9850089122b2b2ffc4cda228bd596e3d1c7d05`. The unchanged HW2 baseline is `158e00e3aba27cb76180379971a845f24d7bbf1f`.
+Verified on 2026-10-13 at implementation commit `af98500`.
 
 Runtime: dbt-core **1.10.15**, dbt-clickhouse **1.9.8**, ClickHouse **25.3.6.56**, SQLFluff **3.4.2**, pre-commit **4.3.0**, Docker Engine **29.8.1**. Packages: dbt_utils **1.3.0**, dbt_date **0.16.1**, dbt_expectations **0.10.10**.
 
-## Clean runs and repeated imports
+## Runs and repeated imports
 
-The verification host had no running containers when inspected. A stop-all command was also executed before verification. Existing project files and all 46 pre-existing Docker volumes were preserved. Only this project's containers, network and `fraud-dbt-hw4_clickhouse_data` volume were created and reset.
-
-The committed code was cloned into a new directory. `make demo` ran twice on a new project volume. That volume was removed with `make reset`, then `make full` ran twice on another new project volume. Each complete run passed model builds, dbt tests, SQLFluff, Python tests and independent CSV reconciliation. The full input was copied into the clone's own `data/train.csv` before execution.
+From a fresh clone, `make demo` ran twice on a new project volume. After `make reset`, `make full` ran twice on another new volume using `data/train.csv`. All four runs passed model builds, dbt tests, SQLFluff, Python tests and CSV reconciliation.
 
 | Dataset | Transactions | Distinct transaction IDs | Frauds | Total amount | Fraud amount |
 |---|---:|---:|---:|---:|---:|
 | Included demo | 24 | 24 | 5 | 9,136.35 | 5,300.65 |
 | Labelled train | 786,431 | 786,431 | 4,504 | 55,239,932.49 | 2,386,632.63 |
 
-The complete audit JSON was identical before and after each repeat import. Counts, amounts, fraud counts, transaction identities and every mart group remained unchanged. Train input SHA256: `2fd291f0d66cbb1f3c3e442396f3725d4cbde650d5dd0c16322c5230d3776b99`.
+Audit results were identical after repeat imports, including transaction identities, counts, amounts and all mart groups. Input checksums are recorded in [verification.json](verification.json).
 
-## Marts and independent results
+## Aggregate checks
 
-The audit reads the original CSV and computes grouping, exact monetary totals, distinct counts, percentile, risk classifications and suspicious flags in Python. It compares complete key sets and all metrics in ClickHouse. Money and P95 must match exactly; averages and percentages use absolute tolerance `1e-7` or relative tolerance `1e-9`, whichever is greater.
+The Python audit recomputes every mart from the original CSV and compares all keys and metrics with ClickHouse. Money and P95 match exactly. Averages and percentages use absolute tolerance `1e-7` or relative tolerance `1e-9`, whichever is greater.
 
 | Mart | Demo groups | Train groups |
 |---|---:|---:|
@@ -32,23 +30,23 @@ The audit reads the original CSV and computes grouping, exact monetary totals, d
 
 All **809 demo** and **186,752 train** metric comparisons passed. Detailed results: [demo audit](audit_demo.json), [train audit](audit_train.json).
 
-## Tests, lint and import failures
+## Tests and lint
 
-Every complete run passed **166 dbt tests**: **158 data tests** and **8 native unit tests**, with zero failures, warnings or skips. Data tests include nulls, uniqueness, accepted values, state relationships, composite-key uniqueness, dbt_expectations ranges and six singular SQL tests for negative amounts, rate bounds, source/staging reconciliation, mart conservation, business rules and customer-key collisions.
+Each run passed **166 dbt tests**: **158 data tests** and **8 native unit tests**, with zero failures, warnings or skips. Data tests cover nulls, unique and composite keys, accepted values, state relationships and numerical bounds. Six singular tests check amounts, fraud rates, source/staging reconciliation, mart totals, business rules and customer-key collisions.
 
-The native unit tests cover staging normalization, amount thresholds, customer identity, UTC boundaries, exact P95, decimal category sums, state distinct counts, customer risk thresholds, weekday/hour grain and merchant suspicion thresholds. All six marts are exercised. **45 Python tests** passed per run, including importer failure, repeat-import and locking cases. The independent audit's reference self-tests also passed.
+Native unit tests cover staging and all six marts, including normalization, identity, UTC boundaries, exact P95, decimal sums, distinct counts and risk thresholds. **45 Python tests** and the audit reference checks passed per run.
 
-SQLFluff passed for compiled model/singular-test SQL and separately for raw SQL unit fixtures. ClickHouse's case-sensitive function names are exempt from function-casing enforcement. A single annotated parametric-aggregate expression uses a narrow parser-rule exception; its P95 behavior is checked by native unit tests and the CSV audit. All **three pre-commit hooks** passed.
+SQLFluff passed for compiled model and singular-test SQL and for raw unit fixtures. Configuration preserves ClickHouse function casing and exempts one parametric-aggregate expression from unsupported parser rules. All **three pre-commit hooks** passed.
 
-A live ClickHouse failure check rejected a missing label in the last CSV row. A second check inserted a real scratch-table batch, then injected a client error before the next insert. Both checks preserved the active source fingerprint, and no scratch tables remained. See [import safety evidence](import_safety.json).
+Live ClickHouse checks rejected a missing label and simulated a failure after a scratch-table insert. Both preserved the active source, with no scratch tables remaining. See [import safety results](import_safety.json).
 
-The concise [test log](tests.log) and [machine-readable verification](verification.json) retain the successful outcomes.
+Results: [test log](tests.log), [verification JSON](verification.json).
 
 ## Generated documentation
 
-`dbt docs generate` produced `index.html`, `manifest.json` and `catalog.json`. All seven models and their columns have descriptions. The catalog contains eight dbt relations (seven models and the state seed) and one raw source. Artifact hashes are in the verification JSON. `make docs-serve` ran `dbt docs serve` and returned HTTP 200.
+`dbt docs generate` produced `index.html`, `manifest.json` and `catalog.json`, with descriptions for all seven models and their columns. The catalog includes the state seed and raw source. `make docs-serve` returned HTTP 200.
 
-The screenshot below is from the generated full-data dbt Docs. The resource filter selects models and sources so the raw → staging → six-mart DAG is readable.
+Full-data dbt Docs, filtered to models and sources:
 
 ![dbt Docs source, staging and six marts](dbt-docs-dag.jpg)
 

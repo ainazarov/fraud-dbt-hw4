@@ -8,7 +8,7 @@ normalizes it in `stg_transactions`, and rebuilds six analytical tables in
 
 Money is stored and summed as decimals. Fractions named `fraud_rate` and
 `large_transaction_share` are percentages (0–100). Dates, ISO weekdays and hours
-are interpreted in UTC because the source has no timezone offsets.
+are interpreted in UTC. Timestamps without an offset are treated as UTC.
 
 Customer identity is a proxy from normalized first name, last name, street and
 postal code. Character-length prefixes make the encoded tuple unambiguous;
@@ -17,7 +17,7 @@ postal code. Character-length prefixes make the encoded tuple unambiguous;
 The amount bands are SMALL (<100), MEDIUM (100 to <500), LARGE (>=500).
 Customer risk bands are LOW (<1% observed fraud), MEDIUM (1% to <10%), HIGH (>=10%).
 A merchant is suspicious when it has at least two fraudulent transactions and
-at least 5% observed fraud. These are explicit descriptive homework rules.
+at least 5% observed fraud. Risk levels and flags use observed fraud labels.
 
 P95 uses `quantileExact(0.95)`: sorted index `min(floor(0.95*N), N-1)`, counting
 from zero. Other sources may use different percentile interpolation.

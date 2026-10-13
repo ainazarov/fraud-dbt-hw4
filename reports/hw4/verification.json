@@ -2,7 +2,6 @@
   "verified_on": "2026-10-13",
   "source_commit": "af9850089122b2b2ffc4cda228bd596e3d1c7d05",
   "hw2_baseline": "158e00e3aba27cb76180379971a845f24d7bbf1f",
-  "source_checkout": "fresh Git bundle clone of committed hw4",
   "versions": {
     "dbt-core": "1.10.15",
     "dbt-clickhouse": "1.9.8",
@@ -69,7 +68,6 @@
     "separate_fresh_demo_and_full_volumes": true,
     "demo_volume_created_at": "2026-10-13T23:07:43+03:00",
     "full_volume_created_at": "2026-10-13T23:09:32+03:00",
-    "unrelated_volumes_preserved": 46,
     "only_new_volume": "fraud-dbt-hw4_clickhouse_data"
   },
   "precommit_hooks_passed": 3,

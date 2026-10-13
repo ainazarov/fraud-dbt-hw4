@@ -1,12 +1,12 @@
 # Fraud analytics with dbt
 
-HW4 extends the HW2 Git baseline with a dbt pipeline:
+dbt models for labelled transaction data:
 
 ```text
 labelled CSV → transactions_db.transactions → stg_transactions → six marts
 ```
 
-Docker Compose starts the project's ClickHouse server, network and named volume. A separate tools container runs the loader, dbt, SQLFluff and tests. HW2's CSV validation and HTTP client are reused. The HW4 loader inserts directly into ClickHouse; Kafka is not needed for this batch pipeline.
+Docker Compose starts a ClickHouse server with its own network and named volume. A tools container loads CSV data directly into ClickHouse and runs dbt, SQLFluff and tests.
 
 ## Run
 
@@ -18,15 +18,15 @@ make demo
 
 This builds the tools image, starts ClickHouse, loads the included synthetic `data/demo.csv`, installs dbt packages, loads the state seed, builds staging and all six marts, runs data and unit tests, generates documentation, lints SQL and checks aggregates against the CSV.
 
-For the full labelled dataset, download `train.csv` from the [course Kaggle dataset](https://www.kaggle.com/t/1918f3f6435300327d38d6c596f97394), sign in and accept the competition terms if requested. Place the file at `data/train.csv`, then run:
+Download `train.csv` from the [course Kaggle dataset](https://www.kaggle.com/t/1918f3f6435300327d38d6c596f97394), place it at `data/train.csv`, then run:
 
 ```bash
 make full
 ```
 
-Use the course CSV with the `target` column. The expected header is shown in `data/demo.csv`. The unlabelled `test.csv` is unsuitable for fraud-rate calculations and is rejected. Large input files are excluded from Git.
+The CSV must include `target` labels (0 or 1); the expected header is in `data/demo.csv`. Unlabelled input is rejected. Large input files are excluded from Git.
 
-Each load validates the complete file, inserts into a scratch table and atomically exchanges it with the active source. A successful load replaces the active dataset: demo and train are evaluated separately. Repeating an import does not append transactions. Invalid or incomplete loads leave the active source intact. Transaction identities retain HW2's SHA256 of dataset, input-file SHA256 and row number. Run one pipeline at a time; the loader serializes imports and Make executes its stages sequentially.
+Each load validates the complete file, inserts into a scratch table and atomically replaces the active source. Demo and train are evaluated separately. Repeated imports do not append transactions; invalid or incomplete loads preserve the active source. Transaction IDs hash the dataset name, file SHA256 and row number. Run one pipeline at a time.
 
 ```bash
 make docs-serve  # open http://localhost:8080
@@ -34,7 +34,7 @@ make down       # stop this project; keep its data
 make reset      # remove this project's containers and volume
 ```
 
-The default Compose project name is `fraud-dbt-hw4`. Set `COMPOSE_PROJECT_NAME` to an unused name to start another isolated copy. ClickHouse is reachable within the Compose network. Only the documentation server needs a host port.
+The default Compose project name is `fraud-dbt-hw4`; `COMPOSE_PROJECT_NAME` can override it. ClickHouse is reachable within the Compose network. The documentation server binds to localhost.
 
 ## Models and definitions
 
@@ -50,7 +50,7 @@ The default Compose project name is `fraud-dbt-hw4`. Set `COMPOSE_PROJECT_NAME` 
 
 All fraud rates and large-transaction shares are percentages from 0 to 100. Monetary inputs and sums use two-decimal fixed-point values. P95 uses ClickHouse `quantileExact(0.95)`: the sorted observation at zero-based index `min(floor(0.95 × n), n − 1)`.
 
-`amount_bucket` assigns SMALL below 100, MEDIUM from 100 to below 500, and LARGE at 500 or above. Customer risk is HIGH at fraud rate ≥10%, MEDIUM at ≥1% and below 10%, otherwise LOW. A merchant is suspicious when it has at least two frauds and a fraud rate ≥5%. These are descriptive homework rules, not a trained prediction model.
+`amount_bucket` assigns SMALL below 100, MEDIUM from 100 to below 500, and LARGE at 500 or above. Customer risk is HIGH at fraud rate ≥10%, MEDIUM at ≥1% and below 10%, otherwise LOW. A merchant is suspicious when it has at least two frauds and a fraud rate ≥5%. Risk levels and flags use observed fraud labels.
 
 The CSV has no customer identifier. `customer_key` hashes length-prefixed, normalized first name, last name, street and postal code. This prevents delimiter ambiguity but cannot distinguish people sharing these attributes or connect address changes. Merchant names are trimmed and lowercased. All times are interpreted in UTC; weekday 1 is Monday. The state seed contains the 50 states and Washington, DC.
 
@@ -64,7 +64,7 @@ Pinned runtime versions are in `requirements.txt`: dbt-core 1.10.15, dbt-clickho
 - Generic tests cover nulls, uniqueness, labels, categories, states and buckets.
 - Singular SQL tests cover business bounds and conservation between layers.
 - Native dbt unit tests use fixed inputs and expected results for normalization, bucket/risk boundaries, aggregate grains, P95 and suspicious merchants.
-- Python tests cover inherited CSV validation and the atomic loader. The independent audit recomputes every mart group from the CSV.
+- Python tests cover CSV validation and the atomic loader. The independent audit recomputes every mart group from the CSV.
 
 | Command | Action |
 |---|---|
@@ -82,4 +82,4 @@ Pinned runtime versions are in `requirements.txt`: dbt-core 1.10.15, dbt-clickho
 
 To install the Git hook on a development host, install `pre-commit==4.3.0` in a Python virtual environment and run `pre-commit install` after `make demo`. The hooks invoke the Docker tools container. The containerized `make precommit` command runs the same checks without host Python dependencies.
 
-Model and column descriptions are included in dbt Docs. Verification evidence and the Docs DAG screenshot are in [reports/hw4](reports/hw4/RESULTS.md). Runtime receipts and audit outputs are written to `results/`; generated dbt artifacts are ignored by Git. The other files in `reports/` are inherited HW2 benchmark evidence.
+Model and column descriptions are included in dbt Docs. [HW4 results](reports/hw4/RESULTS.md) include test logs, aggregate checks and the Docs DAG screenshot. Runtime receipts and audit outputs are written to `results/`; generated dbt artifacts are in `dbt/target/`. Both directories are ignored by Git. Other files in `reports/` contain the HW2 benchmarks.
