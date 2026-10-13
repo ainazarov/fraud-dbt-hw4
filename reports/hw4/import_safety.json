@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "missing_label_rejected": true,
+  "partial_insert_preserved_active_source": true,
+  "scratch_tables_remaining": 0,
+  "before": {
+    "rows": "24",
+    "unique_ids": "24",
+    "amount": "9136.35",
+    "fraud_count": "5",
+    "id_checksum": "7039359093738974850"
+  },
+  "after": {
+    "rows": "24",
+    "unique_ids": "24",
+    "amount": "9136.35",
+    "fraud_count": "5",
+    "id_checksum": "7039359093738974850"
+  }
+}
